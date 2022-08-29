@@ -1,7 +1,8 @@
+import sys
 import json
 import shutil
-import sys
 from pathlib import Path
+
 from lupa import LuaRuntime
 
 from tool import table2dict
@@ -11,16 +12,18 @@ def main():
     if len(sys.argv) > 1:
         version = sys.argv[1]
     else:
-        version = "1.1.53"
+        print("no version args, set version to 1.1.61")
+        version = "1.1.61"
 
     # check folder
     data_folder = Path(f"version_data/{version}")
 
     if not data_folder.exists():
         print(f"can not find data folder {data_folder}")
+        print('please run "get_json.bat 1.1.61" first. (for ver 1.1.61)')
         exit(0)
 
-    # fake to lua
+    # fake to lua. then we will run the lua to get the data
     fake4lua(data_folder)
 
     # get data
@@ -36,7 +39,7 @@ def main():
     out_folder.mkdir(exist_ok=True)
     for key, value in data.items():
         out_file = out_folder / f"{key}.json"
-        out_file.write_text(json.dumps(value), encoding="UTF8")
+        out_file.write_text(json.dumps(value, indent=2), encoding="UTF8")
 
     # To reduce file size, discard some data
     # save json without noise-expression and optimized-particle
