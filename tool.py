@@ -9,7 +9,13 @@ def table2dict(data):
             continue
         if 1 in list(v.keys()):  # for array
             if k == "ingredients":
-                data[k] = {y[1]: y[2] for x, y in v.items()}
+                tmp = {}
+                for x, y in v.items():
+                    if "name" in y:
+                        tmp[y["name"]] = y["amount"]
+                    else:
+                        tmp[y[1]] = y[2]
+                data[k] = tmp
             else:
                 data[k] = [table2dict(y) for x, y in v.items()]
         else:
